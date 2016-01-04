@@ -1,0 +1,17 @@
+{
+   "name": "moonlight/auth",
+   "description": "Package to auth",
+   "keywords": ["bd", "auth", "moonlight"],
+   "homepage": "https://github.com/tandrezone/auth",
+   "license": "MIT",
+   "authors": [
+      {
+         "name": "Tiago Andre",
+         "email": "tandrezone@gmail.com",
+         "homepage": "https://github.com/tandrezone"
+      }
+   ],
+   "require": {
+      "php": ">=5.3.0"
+   }
+}

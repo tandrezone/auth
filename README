@@ -1,0 +1,4 @@
+  moonlight/auth
+    Esta package não esta terminada,
+    Esta package destina-se a fazer uma authorizaçao  basica de modo a poder ser usada como midleware
+    Cria um user simples e as funcoes de login, logout, registo e verificaçao
