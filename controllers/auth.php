@@ -10,7 +10,7 @@
  * If you wanna give more power classes to all contollers just inject them in the /core/controller.php
  */
 include("/packages/moonlight/auth/models/users.php");
-include_once("/core/controller.php");
+include_once("/core/controller.class.php");
 class auth extends controller{
   /**
    * Index, this is the fuction that run when the page open in the base routing
@@ -19,7 +19,9 @@ class auth extends controller{
   function index(){
     echo "AUth index";
   }
-  function login($name,$pass){
+  function login(){
+    $name = $_POST['username'];
+    $pass = $_POST['password'];
     $user = $this->em->getRepository('user')->findBy(array('name' => $name));
     $dbPass = $user[0]->getPass();
     if($pass == $dbPass){
@@ -29,16 +31,17 @@ class auth extends controller{
       $user[0]->setToken($token);
       $this->em->persist($user[0]);
       $this->em->flush();
-      $_SESSION['token'] == $token;
-      $_SESSION['name'] == $name;
+      $_SESSION['token'] = $token;
+      $_SESSION['name'] = $name;
+
     } else {
       echo "pass errada";
     }
     //view login
   }
   function logout(){
-    unset($_SESSION['token']);
-    unset($_SESSION['name']);
+  //  unset($_SESSION['token']);
+  //  unset($_SESSION['name']);
     //view logout
   }
 
@@ -54,7 +57,7 @@ class auth extends controller{
       $user->setToken($token);
       $this->em->persist($user);
       $this->em->flush();
-      $_SESSION['token'] == $token;
+      $_SESSION['token'] = $token;
       return true;
     } else {
       $this->logout();
@@ -62,16 +65,33 @@ class auth extends controller{
     }
 
   }
-  function signIn($name, $email, $pass, $token, $level){
+  function signInTemp(){
+    //return "mostrar formulario de registo";
+    return $this->view->make('signin', ['a' => 1, 'b' => 2])->render();
+  }
+  function loginTemp(){
+
+    //return "mostrar formulario de login";
+    return $this->view->make('login', ['a' => 1, 'b' => 2])->render();
+  }
+  function signIn(){
+    $name = $_POST['username'];
+    $pass = $_POST['password'];
+    $email = $_POST['email'];
+    $token = md5(rand());
+    $level = 10;
     $user = new user();
     $user->setName($name);
     $user->setEmail($email);
     $user->setPass($pass);
-    $user->setToken($toke);
+    $user->setToken($token);
     $user->setLevel($level);
-    $user->em->persist($user);
-    $user->em->flush();
+    $this->em->persist($user);
+    $this->em->flush();
     echo "Created Product with ID " . $user->getId() . "\n";
     //view registar
+  }
+  function access($appname, $user){
+    return true;
   }
 }
