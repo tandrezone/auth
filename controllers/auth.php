@@ -11,7 +11,6 @@
  */
 //include("/packages/moonlight/auth/models/users.php");
 use_model("users");
-
 class auth extends controller{
   /**
    * Index, this is the fuction that run when the page open in the base routing
@@ -26,40 +25,42 @@ class auth extends controller{
         if($user != ""){
           if($user->checkPass($pass)){
             $user->updateToken();
+            $user->saveDefs();
             $this->em->persist($user);
             $this->em->flush();
+            $errors = error::show("Login efectuado com successo", "success");
+            goToUrl("/");
           } else {
-            echo "pass errada";
+            $errors = error::show("Username ou password errado", "danger");
           }
         } else {
-          echo "username errado";
+          $errors = error::show("Username ou password errado", "danger");
         }
       }
-    return $this->view->make('login', ['a' => 1, 'b' => 2])->render();
+    return $this->view->make('login', ["error" => $errors['error'], "type" => $errors['type']])->render();
   }
   function logout(){
   //  unset($_SESSION['token']);
   //  unset($_SESSION['name']);
-    //view logout
   }
 
   function verify() {
+    $name = $_GET['name'];
+    $token = $_GET['token'];
+    $users = $this->em->getRepository('user')->findBy(array('name' => $name));
+    $user = $users[0];
+    if(!empty($user)){
+      if($user->verify($token)){
+        echo "true";
+      } else {
+        echo "false";
+      }
+    } else {
+      echo "false";
+    }
   }
 
   function access($appname, $me){
-    $users = $this->em->getRepository('user')->findBy(array('name' => $me->name));
-    $user = $users[0];
-    if(!empty($user)){
-      if($user->verify()){
-        goToUrl('/');
-        return true;
-      } else {
-        goToUrl('/login');
-        return true;
-      }
-    } else {
-      goToUrl('/login');
-      return true;
-    }
+    return true;
   }
 }

@@ -7,7 +7,8 @@
 
 $intRoute = function($router,$prefix){
   $router->addRoutes(array(
-    array('GET|POST','/'.$prefix.'login', 'auth.login','moonlight/auth')
+    array('GET|POST','/'.$prefix.'login', 'auth.login','moonlight/auth'),
+    array('GET|','/'.$prefix.'users/verify', 'auth.verify','moonlight/auth')
   ));
 }
 ?>

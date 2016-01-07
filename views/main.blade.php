@@ -5,7 +5,7 @@
           echo $c->getHeaderFiles();
          ?>
          @yield('extfiles')
-        <title>App Name - @yield('title')</title>
+        <title>Lite Framework - @yield('title')</title>
     </head>
     <body>
        @yield('content')

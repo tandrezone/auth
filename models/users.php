@@ -89,12 +89,11 @@ class user extends model
   }
 
   public function updateToken(){
-    $token = md5(rand());
-    $this->setToken($token);
+
   }
 
   public function saveDefs(){
-    $me = stdClass();
+    $me = new stdClass();
     $me->name = $this->name;
     $me->email = $this->email;
     $me->token = $this->token;
@@ -102,12 +101,11 @@ class user extends model
     $_SESSION['user'] = json_encode($me);
   }
 
-  public function verify(){
-    $me = json_decode($_SESSION['user']);
-    if($me->token == $this->token){
+  public function verify($token){
+    if($this->token == $token){
       return true;
     } else {
-      unset($_SESSION['user']);
+      return false;
     }
   }
 }
