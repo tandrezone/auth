@@ -51,16 +51,21 @@ class auth extends controller{
     $user = $users[0];
     if(!empty($user)){
       if($user->verify($token)){
-        echo "true";
+        return "true";
       } else {
-        echo "false";
+        return "false";
       }
     } else {
-      echo "false";
+      return "false";
     }
   }
 
   function access($appname, $me){
-    return true;
+    $me = json_decode($me);
+    $users = $this->em->getRepository('user')->findBy(array('name' => $me->name));
+    $user = $users[0];
+    if($user->verify($me->token)) {
+      goToUrl("/bo");
+    }
   }
 }
