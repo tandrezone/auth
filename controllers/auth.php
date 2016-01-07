@@ -9,7 +9,9 @@
  *
  * If you wanna give more power classes to all contollers just inject them in the /core/controller.php
  */
-include("/packages/moonlight/auth/models/users.php");
+//include("/packages/moonlight/auth/models/users.php");
+use_model("users");
+
 class auth extends controller{
   /**
    * Index, this is the fuction that run when the page open in the base routing
@@ -22,13 +24,10 @@ class auth extends controller{
         $users = $this->em->getRepository('user')->findBy(array('name' => $name));
         $user = $users[0];
         if($user != ""){
-          $dbPass = $user->getPass();
-          if($pass == $dbPass){
-            $token = md5(rand());
-            $user->setToken($token);
+          if($user->checkPass($pass)){
+            $user->updateToken();
             $this->em->persist($user);
             $this->em->flush();
-            //pass certa activa variaveis de sessao $_SESSION
           } else {
             echo "pass errada";
           }
@@ -47,7 +46,20 @@ class auth extends controller{
   function verify() {
   }
 
-  function access($appname, $user){
-    return true;
+  function access($appname, $me){
+    $users = $this->em->getRepository('user')->findBy(array('name' => $me->name));
+    $user = $users[0];
+    if(!empty($user)){
+      if($user->verify()){
+        goToUrl('/');
+        return true;
+      } else {
+        goToUrl('/login');
+        return true;
+      }
+    } else {
+      goToUrl('/login');
+      return true;
+    }
   }
 }

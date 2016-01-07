@@ -79,4 +79,35 @@ class user extends model
   {
     $this->level = $level;
   }
+
+  public function checkPass($pass){
+    if(md5($pass) == $this->pass){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function updateToken(){
+    $token = md5(rand());
+    $this->setToken($token);
+  }
+
+  public function saveDefs(){
+    $me = stdClass();
+    $me->name = $this->name;
+    $me->email = $this->email;
+    $me->token = $this->token;
+    $me->level = $this->level;
+    $_SESSION['user'] = json_encode($me);
+  }
+
+  public function verify(){
+    $me = json_decode($_SESSION['user']);
+    if($me->token == $this->token){
+      return true;
+    } else {
+      unset($_SESSION['user']);
+    }
+  }
 }
