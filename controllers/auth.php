@@ -17,10 +17,10 @@ class auth extends controller{
    * @return [View] All the controller routing functions  returns a view, a view is a template with need to know vars
    */
   function login(){
-      $name = $_POST['username'];
+      $email = $_POST['username'];
       $pass = $_POST['password'];
       if($name != "" && $pass != ""){
-        $users = $this->em->getRepository('user')->findBy(array('name' => $name));
+        $users = $this->em->getRepository('user')->findBy(array('email' => $email));
         $user = $users[0];
         if($user != ""){
           if($user->checkPass($pass)){
